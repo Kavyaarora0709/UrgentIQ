@@ -11,9 +11,32 @@ import {
 export function Logo({ size = "md" }: { size?: "md" | "lg" }) {
   return (
     <div className="flex items-center gap-2.5">
-      <Activity className={cn("shrink-0 text-primary", size === "lg" ? "h-10 w-10" : "h-8 w-8")} strokeWidth={2.4} />
+      <div
+        className={cn(
+          "relative shrink-0 overflow-hidden rounded-xl border border-border/60 bg-white p-0.5 shadow-xs grid place-items-center",
+          size === "lg" ? "h-12 w-12" : "h-9 w-9",
+        )}
+      >
+        <img
+          src="/favicon.png"
+          alt="UrgentIQ logo"
+          className="h-full w-full object-contain"
+          onError={(e) => {
+            (e.currentTarget as HTMLElement).style.display = "none";
+          }}
+        />
+        <Activity
+          className={cn(
+            "text-primary absolute inset-0 m-auto -z-10",
+            size === "lg" ? "h-7 w-7" : "h-5 w-5",
+          )}
+          strokeWidth={2.4}
+        />
+      </div>
       <div className="leading-tight">
-        <div className={cn("font-extrabold tracking-tight text-foreground", size === "lg" ? "text-3xl" : "text-xl")}>UrgentIQ</div>
+        <div className={cn("font-extrabold tracking-tight text-foreground", size === "lg" ? "text-3xl" : "text-xl")}>
+          UrgentIQ
+        </div>
         <div className="text-[11px] font-medium text-muted-foreground">AI-Powered Emergency Care</div>
       </div>
     </div>

@@ -24,7 +24,7 @@ export async function signIn(hospital: string, username: string, password: strin
   if (!ok) throw new Error("Invalid hospital, username or password.");
   setState((s) => ({
     ...s,
-    user: { name: "Dr. Rahul Mehta", role: "ER Physician", initials: "DR", hospital },
+    user: { name: "Dr. Harleen Kaur", role: "ER Physician", initials: "HK", hospital },
     prefs: { ...s.prefs, hospital },
   }));
 }

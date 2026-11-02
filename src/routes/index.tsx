@@ -107,12 +107,12 @@ function Login() {
               <Label htmlFor="hospital">Hospital</Label>
               <Input id="hospital" list="hospitals" placeholder="Search or select hospital" autoComplete="off" {...field("hospital")} />
               <datalist id="hospitals">{HOSPITALS.map((h) => <option key={h} value={h} />)}</datalist>
-              {errors.hospital && <p className="text-xs text-critical">{errors.hospital}</p>}
+              {errors["hospital"] && <p className="text-xs text-critical">{errors["hospital"]}</p>}
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="username">Username</Label>
               <Input id="username" autoComplete="username" placeholder="Enter username" {...field("username")} />
-              {errors.username && <p className="text-xs text-critical">{errors.username}</p>}
+              {errors["username"] && <p className="text-xs text-critical">{errors["username"]}</p>}
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="password">Password</Label>
@@ -122,17 +122,29 @@ function Login() {
                   {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
-              {errors.password && <p className="text-xs text-critical">{errors.password}</p>}
+              {errors["password"] && <p className="text-xs text-critical">{errors["password"]}</p>}
             </div>
 
             <Button type="submit" className="h-11 w-full text-base" disabled={loading}>
               {loading ? <><Loader2 className="h-4 w-4 animate-spin" />Signing in…</> : "Sign In to Dashboard"}
             </Button>
 
-            <div className="rounded-lg bg-primary-soft p-3 text-xs">
-              <p className="mb-1 font-semibold text-accent-foreground">Demo login (prototype only)</p>
+            <button
+              type="button"
+              onClick={() => {
+                setForm({
+                  hospital: DEMO_CREDENTIALS.hospital,
+                  username: DEMO_CREDENTIALS.username,
+                  password: DEMO_CREDENTIALS.password,
+                });
+                setErrors({});
+                setAuthError("");
+              }}
+              className="w-full text-left rounded-lg bg-primary-soft p-3 text-xs transition-colors hover:bg-primary-soft/80 cursor-pointer"
+            >
+              <p className="mb-1 font-semibold text-accent-foreground">Demo login (prototype only · click to fill)</p>
               <p className="text-muted-foreground">{DEMO_CREDENTIALS.hospital} · {DEMO_CREDENTIALS.username} · {DEMO_CREDENTIALS.password}</p>
-            </div>
+            </button>
           </form>
           <p className="mt-4 text-center text-xs text-muted-foreground">Authorized healthcare personnel only.</p>
         </div>

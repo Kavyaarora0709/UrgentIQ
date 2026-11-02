@@ -4,14 +4,25 @@ import { describe, expect, it } from "vitest";
 
 import { routeTree } from "@/routeTree.gen";
 
-// Match routes without running loaders or rendering: loaders may need a server or
-// network the test run lacks, and jsdom never loads the stylesheets React waits on.
 describe("App routing", () => {
+  const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
+
   it("matches a page for / instead of falling back to not found", () => {
-    const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
-
     const matches = router.matchRoutes("/");
-
     expect(matches.at(-1)?.routeId).not.toBe(rootRouteId);
+  });
+
+  it("matches Smartwatch Vitals Lab route (/smartwatch)", () => {
+    const matches = router.matchRoutes("/smartwatch");
+    expect(matches.at(-1)?.routeId).not.toBe(rootRouteId);
+    expect(matches.some((m) => m.pathname === "/smartwatch")).toBe(true);
+  });
+
+  it("matches all core routes in navigation", () => {
+    const routes = ["/dashboard", "/queue", "/patients", "/alerts", "/analytics", "/settings"];
+    for (const r of routes) {
+      const matches = router.matchRoutes(r);
+      expect(matches.at(-1)?.routeId).not.toBe(rootRouteId);
+    }
   });
 });

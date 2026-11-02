@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>UrgentIQ – Emergency Care & Smartwatch Vitals</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg1: #eaf3ff;
+  --bg2: #d3e6fc;
+  --card: #fff;
+  --tx: #0f1b3d;
+  --mut: #5b6785;
+  --bd: #e3e9f4;
+  --blue: #2563eb;
+  --soft: #eff4ff;
+  --cb: #fee2e2;
+  --ct: #dc2626;
+  --hb: #fef3c7;
+  --ht: #d97706;
+  --mb: #dbeafe;
+  --mt: #2563eb;
+  --lb: #dcfce7;
+  --lt: #16a34a;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+html { color-scheme: light; }
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, Segoe UI, sans-serif;
+  color: var(--tx);
+  background: linear-gradient(135deg, var(--bg1), var(--bg2));
+  min-height: 100vh;
+  font-size: 14px;
+}
+button, input, select, textarea { font: inherit; color: inherit; }
+.mut { color: var(--mut); }
+.sm { font-size: 12px; }
+.xs { font-size: 11px; }
+.b { font-weight: 700; }
+.c { background: var(--cb); color: var(--ct); }
+.h { background: var(--hb); color: var(--ht); }
+.m { background: var(--mb); color: var(--mt); }
+.l { background: var(--lb); color: var(--lt); }
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo b { font-size: 22px; font-weight: 800; display: block; line-height: 1; }
+.logo span { font-size: 11px; color: var(--mut); }
+
+/* Login */
+.login { display: grid; grid-template-columns: 1.2fr 1fr; min-height: 100vh; padding: 40px 60px; gap: 40px; align-items: center; }
+.login .l1 { align-self: stretch; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
+.eyebrow { color: var(--blue); font-weight: 600; letter-spacing: .08em; font-size: 14px; margin-top: 90px; }
+.login h1 { font-size: clamp(36px, 5vw, 58px); line-height: 1.1; font-weight: 800; margin: 14px 0; max-width: 520px; }
+.feat { display: flex; gap: 22px; flex-wrap: wrap; margin-top: 34px; font-weight: 500; }
+.feat span { display: flex; gap: 7px; align-items: center; }
+.lcard { background: var(--card); border-radius: 24px; padding: 40px; box-shadow: 0 10px 40px rgba(37,99,235,.12); max-width: 560px; width: 100%; justify-self: center; }
+.lcard h2 { margin: 0; font-size: 28px; font-weight: 800; }
+label { display: block; font-weight: 600; margin: 20px 0 6px; }
+.in { width: 100%; padding: 12px 14px; border: 1px solid var(--bd); border-radius: 10px; background: var(--card); box-shadow: 0 1px 3px rgba(0,0,0,.06); outline: none; }
+.in:focus, .btn:focus-visible { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(37,99,235,.2); }
+.btn { background: var(--blue); color: #fff; border: 0; border-radius: 10px; padding: 13px; font-weight: 600; font-size: 16px; width: 100%; cursor: pointer; margin-top: 20px; transition: background .15s; }
+.btn:hover { background: #1d4ed8; }
+.demo { background: var(--soft); border-radius: 12px; padding: 14px 16px; margin-top: 20px; cursor: pointer; color: var(--mut); font-size: 13px; }
+.demo b { color: var(--blue); display: block; margin-bottom: 3px; }
+.err { color: var(--ct); font-size: 12px; margin-top: 10px; min-height: 14px; }
+
+/* Main layout */
+.top { display: flex; align-items: center; gap: 20px; padding: 10px 20px; background: var(--card); border-bottom: 1px solid var(--bd); position: sticky; top: 0; z-index: 10; }
+.search { flex: 1; max-width: 520px; margin: 0 auto; background: var(--soft); }
+.tr { display: flex; align-items: center; gap: 16px; }
+.tr .dt { text-align: right; font-size: 11px; color: var(--mut); }
+.tr .dt b { display: block; font-size: 14px; color: var(--tx); }
+.bell { position: relative; background: none; border: 0; cursor: pointer; font-size: 18px; }
+.bell i { position: absolute; top: 0; right: 0; width: 8px; height: 8px; border-radius: 50%; background: var(--ct); }
+.av { width: 34px; height: 34px; border-radius: 50%; background: var(--blue); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 12px; }
+.shell { display: grid; grid-template-columns: 220px 1fr; min-height: calc(100vh - 56px); }
+nav { background: var(--card); padding: 12px 8px; border-right: 1px solid var(--bd); }
+nav button { display: flex; align-items: center; gap: 10px; width: 100%; padding: 11px 12px; margin-bottom: 4px; border: 0; background: none; border-radius: 10px; cursor: pointer; color: var(--tx); text-align: left; font-size: 13px; transition: background .12s; }
+nav button:hover { background: var(--soft); }
+nav button.on { background: var(--mb); color: var(--blue); font-weight: 700; }
+nav .n { margin-left: auto; background: var(--ct); color: #fff; border-radius: 99px; font-size: 10px; padding: 1px 6px; font-weight: 700; }
+main { padding: 22px 26px; min-width: 0; }
+main h1 { font-size: 24px; margin: 0; font-weight: 800; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+main > p.mut { margin: 4px 0 18px; }
+
+/* Cards & Grid */
+.kp { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 18px; }
+.k { border-radius: 12px; padding: 14px 16px; border: 1px solid var(--bd); background: var(--card); }
+.k b { font-size: 24px; display: block; }
+.k span { font-weight: 600; }
+.k small { display: block; color: var(--mut); font-size: 11px; margin-top: 2px; }
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.card { background: var(--card); border: 1px solid var(--bd); border-radius: 16px; padding: 16px; min-width: 0; box-shadow: 0 1px 3px rgba(0,0,0,.03); }
+.card h3 { margin: 0 0 12px; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: space-between; }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.chip { border: 1px solid transparent; border-radius: 99px; padding: 4px 11px; font-size: 11px; font-weight: 600; cursor: pointer; }
+.chip.sel { outline: 2px solid var(--blue); }
+.chip.all { background: var(--blue); color: #fff; }
+.row { display: flex; align-items: center; gap: 12px; padding: 11px 12px; margin-bottom: 8px; border-radius: 10px; border: 1px solid var(--bd); border-left: 3px solid; cursor: pointer; background: var(--card); }
+.row.c { border-left-color: var(--ct); background: var(--cb); color: var(--tx); }
+.row.h { border-left-color: var(--ht); color: var(--tx); background: var(--card); }
+.row.m { border-left-color: var(--mt); color: var(--tx); background: var(--card); }
+.row.l { border-left-color: var(--lt); color: var(--tx); background: var(--card); }
+.row.act { box-shadow: 0 0 0 2px var(--blue); }
+.rk { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 700; flex: none; }
+.rk.c { background: var(--ct); color: #fff; }
+.rk.h { background: var(--hb); color: var(--ht); }
+.rk.m { background: var(--mb); color: var(--mt); }
+.rk.l { background: var(--lb); color: var(--lt); }
+.pid { width: 84px; flex: none; }
+.pid b { display: block; }
+.cc { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tag { border-radius: 6px; padding: 3px 8px; font-size: 10px; font-weight: 700; display: inline-block; }
+.wt { text-align: right; width: 44px; flex: none; font-size: 10px; color: var(--mut); }
+.wt b { display: block; font-size: 13px; color: var(--tx); }
+.sel2 { border: 1px solid var(--bd); background: var(--card); border-radius: 8px; padding: 6px 10px; font-size: 12px; outline: none; }
+.vit { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 10px 0 14px; }
+.v { border-radius: 10px; padding: 10px; font-size: 11px; border: 1px solid var(--bd); }
+.v b { font-size: 19px; color: var(--tx); }
+.v svg { float: right; width: 34px; height: 16px; }
+.v div { font-weight: 600; }
+.v .fl { font-weight: 700; display: block; margin-top: 2px; }
+.risk { border-radius: 12px; padding: 14px; margin: 12px 0; }
+.risk .bar { height: 7px; border-radius: 9px; background: rgba(127,127,127,.2); margin-top: 8px; overflow: hidden; }
+.risk .bar i { display: block; height: 100%; background: var(--ct); }
+.risk .pc { font-size: 30px; font-weight: 800; float: right; line-height: 1; }
+ul.cl { margin: 0; padding: 0; list-style: none; }
+ul.cl li { padding: 4px 0; display: flex; gap: 8px; align-items: flex-start; }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ct); margin-top: 6px; flex: none; }
+.num { width: 16px; height: 16px; border-radius: 50%; background: var(--lb); color: var(--lt); font-size: 10px; display: grid; place-items: center; flex: none; font-weight: 700; margin-top: 1px; }
+.red { background: var(--ct); color: #fff; border: 0; border-radius: 8px; padding: 8px 14px; font-weight: 600; cursor: pointer; }
+.ghost { background: var(--card); border: 1px solid var(--bd); border-radius: 8px; padding: 7px 12px; font-weight: 600; cursor: pointer; font-size: 12px; }
+.ghost:hover { background: var(--soft); }
+.viewall { width: 100%; border: 0; background: var(--soft); border-radius: 8px; padding: 10px; color: var(--tx); cursor: pointer; font-weight: 500; }
+.tl { border-left: 2px solid var(--bd); margin-left: 6px; padding-left: 16px; }
+.tl div { position: relative; padding-bottom: 14px; }
+.tl div:before { content: ""; position: absolute; left: -23px; top: 3px; width: 10px; height: 10px; border-radius: 50%; background: var(--blue); }
+.al { display: flex; gap: 12px; padding: 12px; border: 1px solid var(--bd); border-radius: 12px; margin-bottom: 8px; align-items: center; }
+.al.un { background: var(--soft); }
+.al .ic { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; flex: none; }
+.bars { display: flex; align-items: flex-end; gap: 10px; height: 150px; padding-top: 8px; }
+.bars div { flex: 1; text-align: center; font-size: 10px; color: var(--mut); display: flex; flex-direction: column; justify-content: flex-end; height: 100%; }
+.bars i { display: block; background: var(--blue); border-radius: 5px 5px 0 0; margin-bottom: 4px; }
+.donut { width: 130px; height: 130px; border-radius: 50%; flex: none; position: relative; }
+.donut:after { content: ""; position: absolute; inset: 26px; border-radius: 50%; background: var(--card); }
+.set { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--bd); }
+.set:last-child { border: 0; }
+.sw { position: relative; width: 40px; height: 22px; flex: none; }
+.sw input { opacity: 0; position: absolute; inset: 0; cursor: pointer; z-index: 1; margin: 0; }
+.sw i { position: absolute; inset: 0; border-radius: 99px; background: var(--bd); transition: .15s; }
+.sw i:after { content: ""; position: absolute; left: 3px; top: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: .15s; }
+.sw input:checked + i { background: var(--blue); }
+.sw input:checked + i:after { left: 21px; }
+.toast { position: fixed; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%); background: var(--tx); color: var(--card); padding: 10px 18px; border-radius: 10px; font-weight: 600; z-index: 99; opacity: 0; transition: .2s; pointer-events: none; }
+.toast.on { opacity: 1; }
+.foot { font-size: 11px; color: var(--mut); margin-top: 14px; }
+.hide { display: none !important; }
+
+/* Badge Utilities */
+.badge-recorded {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  padding: 4px 10px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .03em;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.badge-simulated {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  padding: 2px 8px;
+  border-radius: 99px;
+  font-size: 10px;
+  font-weight: 600;
+  display: inline-block;
+}
+.badge-deviation {
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 11px;
+}
+.badge-pattern {
+  background: #dcfce7;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 11px;
+}
+
+/* Playback Toolbar */
+.playback-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--soft);
+  border: 1px solid var(--bd);
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.play-btn {
+  background: var(--blue);
+  color: #fff;
+  border: 0;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.play-btn:hover { background: #1d4ed8; }
+.speed-btn {
+  background: var(--card);
+  border: 1px solid var(--bd);
+  border-radius: 6px;
+  padding: 5px 9px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.speed-btn.active {
+  background: var(--blue);
+  color: #fff;
+  border-color: var(--blue);
+}
+.seek-slider {
+  flex: 1;
+  min-width: 140px;
+  accent-color: var(--blue);
+  cursor: pointer;
+}
+
+/* Smartwatch Table */
+.vitals-table-wrap {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid var(--bd);
+  background: var(--card);
+  max-height: 380px;
+}
+.v-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.v-table th {
+  background: #f8fafc;
+  color: var(--mut);
+  font-weight: 700;
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--bd);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.v-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #f1f5f9;
+}
+.v-table tr:hover { background: var(--soft); cursor: pointer; }
+.v-table tr.active-row {
+  background: #eff6ff !important;
+  font-weight: 600;
+  border-left: 3px solid var(--blue);
+}
+
+/* Callout Note */
+.callout {
+  border-radius: 12px;
+  padding: 14px 16px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #92400e;
+  font-size: 13px;
+  line-height: 1.45;
+  margin-top: 14px;
+}
+.callout b { color: #78350f; }
+
+@media(max-width: 900px) {
+  .login { grid-template-columns: 1fr; padding: 24px; }
+  .eyebrow { margin-top: 30px; }
+  .shell { grid-template-columns: 1fr; }
+  nav { display: flex; overflow-x: auto; border-right: 0; padding: 6px; }
+  nav button { white-space: nowrap; width: auto; }
+  .g2, .kp { grid-template-columns: 1fr; }
+  .vit { grid-template-columns: 1fr 1fr; }
+  .tr .dt { display: none; }
+  .top { gap: 10px; }
+  main { padding: 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Login Screen -->
+<div id="login" class="login">
+  <div class="l1">
+    <div class="logo">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="#2563eb" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 24h9l5-14 8 28 6-14h14"/>
+      </svg>
+      <div><b>UrgentIQ</b><span>AI-Powered Emergency Care & Vitals</span></div>
+    </div>
+    <div>
+      <div class="eyebrow">AI-POWERED EMERGENCY CARE</div>
+      <h1>Every second matters. Every patient counts.</h1>
+      <p class="mut" style="font-size:18px;max-width:520px">
+        Real-time ER prioritization combined with recorded smartwatch vitals replay and personal statistical baseline analysis.
+      </p>
+      <div class="feat">
+        <span>❤️ Smartwatch Vitals</span>
+        <span>🩺 Clinician-led</span>
+        <span>🛡️ Statistical Triage Support</span>
+      </div>
+    </div>
+    <div class="foot">Academic research prototype · NOT a medical device. Never claims diagnosis or clinical prediction.</div>
+  </div>
+  <div>
+    <form class="lcard" onsubmit="return doLogin(event)">
+      <h2>Sign in</h2>
+      <div class="mut">Access the emergency department & vitals dashboard.</div>
+      <label for="hs">Hospital</label>
+      <input id="hs" class="in" list="hl" placeholder="Search or select hospital" autocomplete="off">
+      <datalist id="hl">
+        <option>City General Hospital</option>
+        <option>St. Mary’s Medical Centre</option>
+        <option>Riverside Hospital</option>
+      </datalist>
+      <label for="us">Username</label>
+      <input id="us" class="in" placeholder="Enter username" autocomplete="username">
+      <label for="pw">Password</label>
+      <div style="position:relative">
+        <input id="pw" class="in" type="password" placeholder="Enter password" autocomplete="current-password">
+        <button type="button" class="bell" style="position:absolute;right:12px;top:10px" onclick="pw.type=pw.type=='password'?'text':'password'" aria-label="Show password">👁</button>
+      </div>
+      <div class="err" id="er"></div>
+      <button class="btn">Sign In to Dashboard</button>
+      <div class="demo" onclick="hs.value='City General Hospital';us.value='doctor';pw.value='Demo@123'">
+        <b>Demo login (prototype only)</b>City General Hospital · doctor · Demo@123
+      </div>
+    </form>
+    <div class="mut sm" style="text-align:center;margin-top:18px">Authorized healthcare personnel only.</div>
+  </div>
+</div>
+
+<!-- Main App Screen -->
+<div id="app" class="hide">
+  <div class="top">
+    <div class="logo">
+      <svg width="30" height="30" viewBox="0 0 48 48" fill="none" stroke="#2563eb" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 24h9l5-14 8 28 6-14h14"/>
+      </svg>
+      <div><b style="font-size:16px">UrgentIQ</b><span style="font-size:9px">AI & Smartwatch Vitals</span></div>
+    </div>
+    <input class="in search" id="gs" placeholder="Search patient by ID, name or symptoms…" oninput="q=this.value;if(view!='queue')go('queue');else render()">
+    <div class="tr">
+      <div class="dt"><span id="d1"></span><b id="d2"></b></div>
+      <button class="bell" onclick="go('alerts')" aria-label="Alerts">🔔<i></i></button>
+      <div class="av">HK</div>
+      <div class="sm"><b>Dr. Harleen Kaur</b><div class="mut xs">ER Physician</div></div>
+      <button class="ghost" onclick="logout()">Sign out</button>
+    </div>
+  </div>
+  <div class="shell">
+    <nav id="nav"></nav>
+    <main id="main"></main>
+  </div>
+</div>
+
+<div class="toast" id="ts"></div>
+
+<script>
+// --- Global Data & App State ---
+const L = { C: ['CRITICAL', 'c'], H: ['HIGH', 'h'], M: ['MODERATE', 'm'], L: ['LOW', 'l'] };
+const A = {
+  C: ['Immediate physician review', 'Continuous vitals monitoring', 'ECG and cardiac-marker assessment', 'Assess oxygen requirements', 'Prepare for possible escalation of care'],
+  H: ['Physician review within 15 minutes', 'Repeat vitals every 15 minutes', 'Order relevant labs / imaging', 'Reassess pain and symptoms'],
+  M: ['Review within 60 minutes', 'Repeat vitals every 30 minutes', 'Symptom-directed assessment'],
+  L: ['Routine assessment', 'Provide self-care advice', 'Reassess if symptoms worsen']
+};
+
+// Simulated ER patients (explicitly marked simulated)
+const P = [
+  [1042,85,'M','Chest pain, breathlessness','C',2,'Ramesh Kumar','10:14 AM',110,92,'160/100',24,92,'Walk-in','Possible acute coronary syndrome|Risk of respiratory compromise|Elevated blood pressure and heart rate'],
+  [1038,34,'F','Severe abdominal pain','C',5,'Sunita Verma','10:11 AM',118,97,'100/64',22,84,'Ambulance','Possible acute abdomen|Tachycardia with low-normal BP|Risk of internal bleeding'],
+  [1045,67,'M','Altered consciousness','C',6,'Mohan Lal','10:10 AM',58,94,'150/90',16,88,'Ambulance','Possible stroke or metabolic cause|Bradycardia with raised BP|Airway protection may be needed'],
+  [1031,28,'F','High fever, vomiting','H',12,'Neha Singh','10:04 AM',104,97,'105/68',20,61,'Walk-in','Possible infection / sepsis screen|Dehydration risk|Persistent vomiting'],
+  [1047,52,'M','Head injury (fall)','H',15,'Arjun Rao','10:01 AM',88,98,'138/86',18,58,'Walk-in','Possible intracranial injury|Monitor neurological status|Anticoagulant use unknown'],
+  [1036,19,'M','Shortness of breath','H',18,'Imran Khan','09:58 AM',112,93,'118/74',26,64,'Walk-in','Respiratory distress|Borderline oxygen saturation|Possible asthma exacerbation'],
+  [1050,73,'F','Dizziness, fainting','H',24,'Kamla Devi','09:52 AM',48,96,'96/58',17,55,'Walk-in','Possible arrhythmia|Low blood pressure|Fall risk'],
+  [1033,45,'M','Burn, right hand','H',27,'Vikram Joshi','09:49 AM',96,99,'128/82',18,42,'Walk-in','Partial-thickness burn|Pain control needed|Infection risk'],
+  [1040,31,'F','Severe migraine','M',31,'Pooja Nair','09:45 AM',82,99,'122/78',16,24,'Walk-in','Rule out red-flag headache|Photophobia, nausea'],
+  [1044,59,'M','Lower back pain','M',38,'Harish Gupta','09:38 AM',78,98,'142/88',16,22,'Walk-in','Mechanical vs. neurological cause|Elevated blood pressure'],
+  [1039,24,'M','Ankle sprain','M',44,'Dev Malhotra','09:32 AM',80,99,'120/76',15,12,'Walk-in','Possible ligament injury|Weight-bearing assessment'],
+  [1052,22,'F','Sore throat','L',52,'Anjali Rao','09:25 AM',76,99,'112/70',14,6,'Walk-in','Likely viral pharyngitis']
+].map(a => ({
+  id: 'P-' + a[0], age: a[1], sex: a[2] == 'M' ? 'Male' : 'Female', cc: a[3],
+  lv: a[4], w: a[5], name: a[6], t: a[7], hr: a[8], sp: a[9], bp: a[10], rr: a[11],
+  risk: a[12], src: a[13], con: a[14].split('|'), notes: []
+}));
+
+let AL = [
+  { t: 'P-1042 vitals deteriorating: SpO₂ 92%, HR 110 (simulated)', lv: 'c', m: '2 min ago', u: 1 },
+  { t: 'P-1045 flagged for altered consciousness (simulated)', lv: 'c', m: '6 min ago', u: 1 },
+  { t: 'P-1036 breathing rate rising (26/min) (simulated)', lv: 'h', m: '9 min ago', u: 1 },
+  { t: 'P-1031 wait time exceeded target (simulated)', lv: 'h', m: '14 min ago', u: 0 },
+  { t: 'Bed 4 now available in resus (simulated)', lv: 'l', m: '21 min ago', u: 0 }
+];
+
+let view = 'dash';
+let sel = 0;
+let fl = 'All';
+let q = '';
+let srt = 'Priority';
+
+// Smartwatch Vitals Specific State
+let watchData = null;
+let watchLoading = false;
+let watchError = null;
+let playbackIdx = 0;
+let isPlaying = false;
+let playbackTimer = null;
+let playbackSpeed = 1; // 1x, 2x, 5x, 10x
+let testBpmInput = '';
+let testBpmResult = null;
+let testBpmError = null;
+let testBpmLoading = false;
+
+const $ = s => document.getElementById(s);
+const NAV = [
+  ['dash', 'Emergency Dashboard', '🏠'],
+  ['watch', 'Watch Vitals', '⌚'],
+  ['queue', 'Patient Queue', '👥'],
+  ['patient', 'Patient Details', '📋'],
+  ['alerts', 'Alerts', '🔔'],
+  ['stats', 'Analytics', '📊'],
+  ['prefs', 'Settings', '⚙️']
+];
+
+function toast(m) {
+  const t = $('ts');
+  t.textContent = m;
+  t.classList.add('on');
+  clearTimeout(t._h);
+  t._h = setTimeout(() => t.classList.remove('on'), 2200);
+}
+
+function doLogin(e) {
+  e.preventDefault();
+  if (!$('hs').value.trim() || $('us').value.trim().toLowerCase() != 'doctor' || $('pw').value != 'Demo@123') {
+    $('er').textContent = 'Check hospital, username and password, or use the demo login below.';
+    return false;
+  }
+  $('login').classList.add('hide');
+  $('app').classList.remove('hide');
+  const target = location.hash.slice(1) && NAV.some(n => n[0] == location.hash.slice(1)) ? location.hash.slice(1) : 'dash';
+  go(target);
+  clock();
+  return false;
+}
+
+function logout() {
+  stopPlayback();
+  $('app').classList.add('hide');
+  $('login').classList.remove('hide');
+  $('pw').value = '';
+  $('er').textContent = '';
+}
+
+function clock() {
+  const d = new Date();
+  $('d1').textContent = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  $('d2').textContent = d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+}
+setInterval(clock, 30000);
+
+function go(v) {
+  view = v;
+  try { location.hash = v; } catch (e) {}
+  if (v === 'watch' && !watchData && !watchLoading) {
+    loadWatchData();
+  }
+  render();
+  scrollTo(0, 0);
+}
+
+function pick(i, to) {
+  sel = i;
+  if (to) go(to);
+  else render();
+}
+
+const unread = () => AL.filter(a => a.u).length;
+
+// --- Watch Vitals API & Playback Logic ---
+
+async function loadWatchData() {
+  watchLoading = true;
+  watchError = null;
+  render();
+  try {
+    const res = await fetch('/api/data');
+    if (!res.ok) {
+      const errJson = await res.json().catch(() => ({}));
+      throw new Error(errJson.message || `Server responded with status ${res.status}`);
+    }
+    const data = await res.json();
+    watchData = data;
+    playbackIdx = 0;
+    watchLoading = false;
+    render();
+  } catch (err) {
+    console.error('Failed to load watch data:', err);
+    watchError = err.message || 'Unable to connect to smartwatch vitals backend.';
+    watchLoading = false;
+    render();
+  }
+}
+
+function togglePlayback() {
+  if (isPlaying) {
+    stopPlayback();
+  } else {
+    startPlayback();
+  }
+  render();
+}
+
+function startPlayback() {
+  if (!watchData || !watchData.readings || !watchData.readings.length) return;
+  isPlaying = true;
+  clearInterval(playbackTimer);
+  const baseIntervalMs = 1500;
+  const interval = Math.max(100, Math.round(baseIntervalMs / playbackSpeed));
+  playbackTimer = setInterval(() => {
+    if (playbackIdx >= watchData.readings.length - 1) {
+      playbackIdx = 0; // Loop or stop
+    } else {
+      playbackIdx++;
+    }
+    renderPlaybackStateOnly();
+  }, interval);
+}
+
+function stopPlayback() {
+  isPlaying = false;
+  clearInterval(playbackTimer);
+}
+
+function resetPlayback() {
+  stopPlayback();
+  playbackIdx = 0;
+  render();
+}
+
+function setPlaybackSpeed(s) {
+  playbackSpeed = s;
+  if (isPlaying) {
+    startPlayback();
+  }
+  render();
+}
+
+function seekPlayback(idx) {
+  playbackIdx = Math.max(0, Math.min(idx, (watchData?.readings?.length || 1) - 1));
+  render();
+}
+
+// Optimization: update dynamic playback elements without rebuilding full DOM
+function renderPlaybackStateOnly() {
+  const current = watchData?.readings?.[playbackIdx];
+  if (!current) return;
+  
+  const bpmEl = $('replayed-bpm-val');
+  if (bpmEl) bpmEl.textContent = current.bpm.toFixed(0);
+
+  const statusEl = $('replayed-status-badge');
+  if (statusEl) {
+    statusEl.className = current.status === 'within_personal_statistical_pattern' ? 'badge-pattern' : 'badge-deviation';
+    statusEl.textContent = current.status === 'within_personal_statistical_pattern' ? 'Within Personal Pattern' : '⚠️ Unusual Deviation Review';
+  }
+
+  const slider = $('playback-slider');
+  if (slider) slider.value = playbackIdx;
+
+  const counter = $('playback-counter');
+  if (counter) counter.textContent = `Reading ${playbackIdx + 1} of ${watchData.readings.length} (${current.timestamp.split(' ')[1]})`;
+
+  // Update table row highlighting
+  const rows = document.querySelectorAll('.v-table tr[data-idx]');
+  rows.forEach(r => {
+    if (r.getAttribute('data-idx') == playbackIdx) {
+      r.classList.add('active-row');
+      r.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    } else {
+      r.classList.remove('active-row');
+    }
+  });
+
+  // Update selected reading panel
+  const panel = $('selected-reading-details');
+  if (panel) {
+    panel.innerHTML = renderSelectedReadingHTML(current);
+  }
+
+  // Update SVG scrubber marker
+  const marker = $('svg-scrubber-marker');
+  if (marker) {
+    const pt = getSvgPointCoordinates(playbackIdx, current.bpm);
+    marker.setAttribute('cx', pt.x);
+    marker.setAttribute('cy', pt.y);
+  }
+}
+
+async function handleTestBpm(e) {
+  if (e) e.preventDefault();
+  const val = parseFloat(testBpmInput);
+  testBpmError = null;
+  testBpmResult = null;
+
+  if (isNaN(val)) {
+    testBpmError = 'Please enter a numeric BPM value.';
+    render();
+    return;
+  }
+  if (val < 20 || val > 250) {
+    testBpmError = 'BPM must be in physiological range between 20 and 250.';
+    render();
+    return;
+  }
+
+  testBpmLoading = true;
+  render();
+
+  try {
+    const res = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ bpm: val })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message || 'Analysis error');
+    }
+    testBpmResult = data;
+    testBpmLoading = false;
+    render();
+  } catch (err) {
+    testBpmError = err.message || 'Failed to analyze test BPM';
+    testBpmLoading = false;
+    render();
+  }
+}
+
+// Coordinate calculation for SVG line chart
+function getSvgPointCoordinates(index, bpm) {
+  const width = 760;
+  const height = 240;
+  const padL = 45;
+  const padR = 20;
+  const padT = 25;
+  const padB = 30;
+
+  const total = (watchData?.readings?.length || 19) - 1;
+  const x = padL + (index / total) * (width - padL - padR);
+
+  // BPM Y-range: 40 to 140
+  const minY = 40;
+  const maxY = 140;
+  const clamped = Math.max(minY, Math.min(maxY, bpm));
+  const y = height - padB - ((clamped - minY) / (maxY - minY)) * (height - padT - padB);
+
+  return { x: Math.round(x), y: Math.round(y) };
+}
+
+function renderSvgChart() {
+  if (!watchData || !watchData.readings || !watchData.readings.length) return '';
+
+  const readings = watchData.readings;
+  const baseline = watchData.baseline;
+  const median = baseline.median_bpm || 84.0;
+  const mad = baseline.mad_bpm || 4.0;
+  
+  // Upper & lower band threshold for |z| <= 3.5
+  // z = 0.67449 * (bpm - median) / mad => bpm = median +/- (3.5 * mad / 0.67449)
+  const bandHalfWidth = (3.5 * mad) / 0.6744907594765952; // ~20.76 bpm => [63.24, 104.76]
+  const bandLower = median - bandHalfWidth;
+  const bandUpper = median + bandHalfWidth;
+
+  const width = 760;
+  const height = 240;
+  const padL = 45;
+  const padR = 20;
+  const padT = 25;
+  const padB = 30;
+
+  const yForBpm = b => {
+    const minY = 40, maxY = 140;
+    return height - padB - ((b - minY) / (maxY - minY)) * (height - padT - padB);
+  };
+
+  const yMedian = yForBpm(median);
+  const yBandTop = yForBpm(bandUpper);
+  const yBandBottom = yForBpm(bandLower);
+  const bandHeight = yBandBottom - yBandTop;
+
+  // Generate polyline path
+  const points = readings.map((r, i) => {
+    const pt = getSvgPointCoordinates(i, r.bpm);
+    return `${pt.x},${pt.y}`;
+  }).join(' ');
+
+  // Current scrubber coordinate
+  const currentR = readings[playbackIdx] || readings[0];
+  const curPt = getSvgPointCoordinates(playbackIdx, currentR.bpm);
+
+  return `
+    <div style="position:relative;width:100%;background:#fafcff;border:1px solid var(--bd);border-radius:12px;padding:12px 14px 6px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:12px;">
+        <span class="mut b">CHRONOLOGICAL RECORDED HEART RATE (19 READINGS)</span>
+        <div style="display:flex;gap:12px;font-size:11px;align-items:center;">
+          <span style="display:flex;align-items:center;gap:4px;"><i style="width:12px;height:12px;background:#dcfce7;border:1px solid #86efac;border-radius:2px;display:inline-block"></i> Personal Pattern Band (±3.5 MAD)</span>
+          <span style="display:flex;align-items:center;gap:4px;"><i style="width:14px;border-top:2px dashed #2563eb;display:inline-block"></i> Baseline Median (${median} BPM)</span>
+          <span style="display:flex;align-items:center;gap:4px;"><i style="width:8px;height:8px;background:#dc2626;border-radius:50%;display:inline-block"></i> Unusual Deviation</span>
+        </div>
+      </div>
+      <svg viewBox="0 0 ${width} ${height}" style="width:100%;height:auto;overflow:visible;font-family:inherit;">
+        <defs>
+          <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#2563eb"/>
+            <stop offset="100%" stop-color="#93c5fd"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Grid Lines & Y-Axis Labels -->
+        ${[40, 60, 80, 100, 120, 140].map(val => {
+          const y = yForBpm(val);
+          return `
+            <line x1="${padL}" y1="${y}" x2="${width - padR}" y2="${y}" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>
+            <text x="${padL - 8}" y="${y + 4}" fill="#64748b" font-size="10" text-anchor="end" font-weight="600">${val}</text>
+          `;
+        }).join('')}
+
+        <!-- Statistical Pattern Band (|z| <= 3.5) -->
+        <rect x="${padL}" y="${yBandTop}" width="${width - padL - padR}" height="${bandHeight}" fill="#dcfce7" fill-opacity="0.55" stroke="#bbf7d0" stroke-width="1"/>
+        <text x="${width - padR - 6}" y="${yBandTop + 13}" fill="#15803d" font-size="9" text-anchor="end" font-weight="700">Upper Pattern Limit (104.8 bpm)</text>
+        <text x="${width - padR - 6}" y="${yBandBottom - 4}" fill="#15803d" font-size="9" text-anchor="end" font-weight="700">Lower Pattern Limit (63.2 bpm)</text>
+
+        <!-- Baseline Median Horizontal Line -->
+        <line x1="${padL}" y1="${yMedian}" x2="${width - padR}" y2="${yMedian}" stroke="#2563eb" stroke-width="2" stroke-dasharray="6,4"/>
+        <text x="${padL + 8}" y="${yMedian - 5}" fill="#1d4ed8" font-size="10" font-weight="800">Personal Median: ${median} bpm</text>
+
+        <!-- Recorded Vitals Connecting Polyline -->
+        <polyline points="${points}" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+
+        <!-- Individual Data Points -->
+        ${readings.map((r, i) => {
+          const pt = getSvgPointCoordinates(i, r.bpm);
+          const isDev = r.status === 'unusual_deviation_review';
+          const fill = isDev ? '#dc2626' : '#2563eb';
+          const radius = isDev ? 5.5 : 4;
+          const stroke = isDev ? '#fee2e2' : '#ffffff';
+          const isCurrent = i === playbackIdx;
+          const timeLabel = r.timestamp.split(' ')[1].slice(0, 5);
+
+          return `
+            <g style="cursor:pointer;" onclick="seekPlayback(${i})">
+              ${isDev ? `<circle cx="${pt.x}" cy="${pt.y}" r="9" fill="#fecaca" fill-opacity="0.6"/>` : ''}
+              <circle cx="${pt.x}" cy="${pt.y}" r="${radius}" fill="${fill}" stroke="${stroke}" stroke-width="2"/>
+              ${(i === 0 || i === 4 || i === 10 || i === 18) ? `
+                <text x="${pt.x}" y="${pt.y - 10}" fill="${isDev ? '#b91c1c' : '#0f172a'}" font-size="10" font-weight="700" text-anchor="middle">${r.bpm}</text>
+                <text x="${pt.x}" y="${height - 10}" fill="#64748b" font-size="9" text-anchor="middle">${timeLabel}</text>
+              ` : ''}
+            </g>
+          `;
+        }).join('')}
+
+        <!-- Active Scrubber Vertical Cursor & Marker -->
+        <line x1="${curPt.x}" y1="${padT}" x2="${curPt.x}" y2="${height - padB}" stroke="#1d4ed8" stroke-width="1.5" stroke-dasharray="2,2"/>
+        <circle id="svg-scrubber-marker" cx="${curPt.x}" cy="${curPt.y}" r="8" fill="#1d4ed8" stroke="#ffffff" stroke-width="2.5" style="filter: drop-shadow(0 2px 4px rgba(37,99,235,0.4));"/>
+      </svg>
+      <div class="sm mut" style="text-align:right;margin-top:2px;">Click any point on the chart to jump playback.</div>
+    </div>
+  `;
+}
+
+function renderSelectedReadingHTML(r) {
+  if (!r) return '<div class="mut sm">Select a reading to view details.</div>';
+  const isDev = r.status === 'unusual_deviation_review';
+  const statusBadge = isDev
+    ? `<span class="badge-deviation">⚠️ Unusual Deviation Review</span>`
+    : `<span class="badge-pattern">✓ Within Personal Statistical Pattern</span>`;
+
+  return `
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+      <div>
+        <span class="badge-recorded">RECORDED READING #${r.id}</span>
+        <div style="font-size:24px;font-weight:800;margin-top:6px;color:var(--tx)">
+          ${r.bpm.toFixed(0)} <span style="font-size:14px;font-weight:600;color:var(--mut)">BPM</span>
+        </div>
+      </div>
+      <div style="text-align:right;">
+        ${statusBadge}
+        <div class="xs mut" style="margin-top:4px;">Source: <b>${r.source}</b></div>
+      </div>
+    </div>
+    
+    <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:10px;margin-bottom:12px;background:var(--soft);padding:10px 12px;border-radius:10px;border:1px solid var(--bd);">
+      <div>
+        <span class="xs mut b">TIMESTAMP (IST)</span>
+        <div class="sm b" style="margin-top:2px;">${r.timestamp}</div>
+      </div>
+      <div>
+        <span class="xs mut b">DEVIATION FROM BASELINE</span>
+        <div class="sm b" style="margin-top:2px;color:${r.deviation_bpm >= 0 ? '#1d4ed8' : '#047857'}">
+          ${r.deviation_bpm >= 0 ? '+' : ''}${r.deviation_bpm.toFixed(1)} bpm
+        </div>
+      </div>
+      <div>
+        <span class="xs mut b">ROBUST Z-SCORE</span>
+        <div class="sm b" style="margin-top:2px;color:${isDev ? '#dc2626' : '#1e293b'}">
+          ${r.robust_z >= 0 ? '+' : ''}${r.robust_z.toFixed(2)}
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:10px 12px;background:#f8fafc;border-left:3px solid var(--blue);border-radius:6px;font-size:12px;">
+      <b>Reminder:</b> Statistical deviation is not a diagnosis. Values indicate difference from your preliminary personal pattern.
+    </div>
+  `;
+}
+
+// --- Watch Vitals View Renderer ---
+function renderWatchVitalsPage() {
+  if (watchLoading) {
+    return `
+      <h1>Smartwatch Vitals Replay</h1>
+      <p class="mut">Replaying recorded DaFit heart rate export and evaluating personal statistical deviations.</p>
+      <div class="card" style="text-align:center;padding:60px 20px;">
+        <div style="font-size:32px;animation:spin 1s infinite linear;display:inline-block">⏳</div>
+        <div class="b" style="margin-top:12px;font-size:16px;">Loading recorded vitals data from backend…</div>
+        <p class="mut sm">Validating schema and computing non-parametric personal baseline.</p>
+      </div>
+    `;
+  }
+
+  if (watchError) {
+    return `
+      <h1>Smartwatch Vitals Replay</h1>
+      <p class="mut">Replaying recorded DaFit heart rate export and evaluating personal statistical deviations.</p>
+      <div class="card" style="border-left:4px solid var(--ct);padding:24px;">
+        <h3 style="color:var(--ct);margin-top:0;">⚠️ Failed to load recorded vitals data</h3>
+        <p class="mut">${watchError}</p>
+        <button class="btn" style="width:auto;padding:8px 20px;" onclick="loadWatchData()">Retry Connection</button>
+      </div>
+    `;
+  }
+
+  if (!watchData || !watchData.readings || !watchData.readings.length) {
+    return `
+      <h1>Smartwatch Vitals Replay</h1>
+      <div class="card" style="text-align:center;padding:40px;">
+        <div class="mut">No recorded readings available in data export.</div>
+        <button class="ghost" style="margin-top:12px;" onclick="loadWatchData()">Reload Data</button>
+      </div>
+    `;
+  }
+
+  const readings = watchData.readings;
+  const currentR = readings[playbackIdx] || readings[0];
+  const baseline = watchData.baseline;
+  const daily = watchData.daily_summary;
+  const notes = watchData.notes;
+
+  return `
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:8px;">
+      <div>
+        <h1>Smartwatch Vitals Replay <span class="badge-recorded">RECORDED DATA – not a live watch</span></h1>
+        <p class="mut" style="margin-top:4px;margin-bottom:0;">
+          Playback of recorded DaFit heart rate data against preliminary non-parametric personal baseline.
+        </p>
+      </div>
+      <button class="ghost" onclick="loadWatchData()">🔄 Refresh Data</button>
+    </div>
+
+    <!-- KPI Summary Cards -->
+    <div class="kp">
+      <div class="k m">
+        <small class="mut b">REPLAYED HEART RATE</small>
+        <div style="display:flex;align-items:baseline;gap:6px;margin:4px 0;">
+          <b id="replayed-bpm-val">${currentR.bpm.toFixed(0)}</b>
+          <span class="sm mut">BPM</span>
+        </div>
+        <span id="replayed-status-badge" class="${currentR.status === 'within_personal_statistical_pattern' ? 'badge-pattern' : 'badge-deviation'}">
+          ${currentR.status === 'within_personal_statistical_pattern' ? 'Within Personal Pattern' : '⚠️ Unusual Deviation Review'}
+        </span>
+      </div>
+
+      <div class="k l">
+        <small class="mut b">BASELINE MEDIAN (MAD)</small>
+        <div style="display:flex;align-items:baseline;gap:6px;margin:4px 0;">
+          <b>${baseline.median_bpm.toFixed(1)}</b>
+          <span class="sm mut">±${baseline.mad_bpm.toFixed(1)} bpm</span>
+        </div>
+        <small>Mean: ${baseline.mean_bpm.toFixed(2)} bpm · Q1: ${baseline.q1_bpm} / Q3: ${baseline.q3_bpm}</small>
+      </div>
+
+      <div class="k c">
+        <small class="mut b">MIN / MAX OBSERVED</small>
+        <div style="display:flex;align-items:baseline;gap:6px;margin:4px 0;">
+          <b>${baseline.min_observed_bpm.toFixed(0)} / ${baseline.max_observed_bpm.toFixed(0)}</b>
+          <span class="sm mut">BPM</span>
+        </div>
+        <small>Recorded range from timestamped measurements</small>
+      </div>
+
+      <div class="k h">
+        <small class="mut b">TIMESTAMPED READINGS</small>
+        <div style="display:flex;align-items:baseline;gap:6px;margin:4px 0;">
+          <b>${readings.length}</b>
+          <span class="sm mut">samples</span>
+        </div>
+        <small>${notes.untimed_samples_excluded} untimed array samples excluded</small>
+      </div>
+    </div>
+
+    <!-- Playback Toolbar -->
+    <div class="playback-bar">
+      <button class="play-btn" onclick="togglePlayback()">
+        ${isPlaying ? '⏸ Pause' : '▶ Play Replay'}
+      </button>
+      <button class="ghost" onclick="resetPlayback()" title="Reset to start">⏮ Reset</button>
+
+      <span id="playback-counter" class="sm b" style="min-width:180px;">
+        Reading ${playbackIdx + 1} of ${readings.length} (${currentR.timestamp.split(' ')[1]})
+      </span>
+
+      <input id="playback-slider" type="range" class="seek-slider" min="0" max="${readings.length - 1}" value="${playbackIdx}" oninput="seekPlayback(+this.value)">
+
+      <div style="display:flex;align-items:center;gap:4px;">
+        <span class="xs mut b">SPEED:</span>
+        ${[1, 2, 5, 10].map(s => `
+          <button class="speed-btn ${playbackSpeed === s ? 'active' : ''}" onclick="setPlaybackSpeed(${s})">${s}×</button>
+        `).join('')}
+      </div>
+    </div>
+
+    <!-- Chronological Chart Card -->
+    <div class="card" style="margin-bottom:16px;">
+      <h3>Chronological Heart Rate Series</h3>
+      ${renderSvgChart()}
+    </div>
+
+    <!-- Two Column Grid: Selected Reading & Test BPM -->
+    <div class="g2" style="margin-bottom:16px;">
+      <!-- Selected Reading Details -->
+      <div class="card">
+        <h3>Selected Reading Details</h3>
+        <div id="selected-reading-details">
+          ${renderSelectedReadingHTML(currentR)}
+        </div>
+      </div>
+
+      <!-- Test a Candidate BPM -->
+      <div class="card">
+        <h3>
+          <span>Test a BPM Value</span>
+          <span class="badge-simulated">test input (not recorded)</span>
+        </h3>
+        <p class="mut sm" style="margin-top:0;">
+          Evaluate any heart rate reading against the preliminary personal baseline via <code>POST /api/analyze</code>.
+        </p>
+        <form onsubmit="return handleTestBpm(event)" style="display:flex;gap:10px;align-items:center;margin-bottom:12px;">
+          <input class="in" type="number" step="any" min="20" max="250" placeholder="e.g. 115" value="${testBpmInput}" oninput="testBpmInput=this.value" required style="max-width:180px;">
+          <button class="play-btn" style="padding:11px 18px;" type="submit" ${testBpmLoading ? 'disabled' : ''}>
+            ${testBpmLoading ? 'Analyzing…' : 'Evaluate BPM'}
+          </button>
+        </form>
+
+        ${testBpmError ? `
+          <div style="padding:8px 12px;background:#fee2e2;border:1px solid #fecaca;color:#dc2626;border-radius:8px;font-size:12px;margin-bottom:10px;">
+            ⚠️ ${testBpmError}
+          </div>
+        ` : ''}
+
+        ${testBpmResult ? `
+          <div style="background:var(--soft);border:1px solid var(--bd);border-radius:10px;padding:12px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div>
+                <span class="badge-simulated">${testBpmResult.source}</span>
+                <b style="font-size:18px;display:block;margin-top:4px;">${testBpmResult.bpm} BPM</b>
+              </div>
+              <div>
+                <span class="${testBpmResult.status === 'within_personal_statistical_pattern' ? 'badge-pattern' : 'badge-deviation'}">
+                  ${testBpmResult.status === 'within_personal_statistical_pattern' ? 'Within Personal Pattern' : '⚠️ Unusual Deviation Review'}
+                </span>
+              </div>
+            </div>
+            <div class="sm" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0;">
+              <div>Baseline: <b>${testBpmResult.baseline_bpm} BPM</b></div>
+              <div>Deviation: <b>${testBpmResult.deviation_bpm >= 0 ? '+' : ''}${testBpmResult.deviation_bpm} BPM</b></div>
+              <div>Robust Z-Score: <b>${testBpmResult.robust_z.toFixed(2)}</b></div>
+              <div>Status: <b>${testBpmResult.status}</b></div>
+            </div>
+            <div class="xs mut">${testBpmResult.disclaimer}</div>
+          </div>
+        ` : `
+          <div class="mut xs" style="background:#f8fafc;padding:10px;border-radius:8px;border:1px dashed var(--bd);">
+            💡 Enter a candidate heart rate (e.g., 52, 85, or 124) to see its robust Z-score calculation and personal pattern status.
+          </div>
+        `}
+      </div>
+    </div>
+
+    <!-- Table of All 19 Recorded Readings -->
+    <div class="card" style="margin-bottom:16px;">
+      <h3>All Recorded Heart Rate Readings (${readings.length})</h3>
+      <div class="vitals-table-wrap">
+        <table class="v-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Timestamp (IST)</th>
+              <th>BPM</th>
+              <th>Baseline</th>
+              <th>Deviation</th>
+              <th>Robust Z</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${readings.map((r, i) => {
+              const isDev = r.status === 'unusual_deviation_review';
+              const isCur = i === playbackIdx;
+              return `
+                <tr data-idx="${i}" class="${isCur ? 'active-row' : ''}" onclick="seekPlayback(${i})">
+                  <td><b>${r.id}</b></td>
+                  <td>${r.timestamp}</td>
+                  <td><b>${r.bpm}</b> bpm</td>
+                  <td>${baseline.median_bpm} bpm</td>
+                  <td style="color:${r.deviation_bpm >= 0 ? '#1d4ed8' : '#047857'}">
+                    ${r.deviation_bpm >= 0 ? '+' : ''}${r.deviation_bpm.toFixed(1)}
+                  </td>
+                  <td><b>${r.robust_z >= 0 ? '+' : ''}${r.robust_z.toFixed(2)}</b></td>
+                  <td>
+                    <span class="${isDev ? 'badge-deviation' : 'badge-pattern'}">
+                      ${isDev ? '⚠️ Unusual Deviation' : 'Within Pattern'}
+                    </span>
+                  </td>
+                  <td>
+                    <button class="ghost" style="padding:3px 8px;font-size:11px;" onclick="event.stopPropagation();seekPlayback(${i})">Seek</button>
+                  </td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Notes & Discrepancy Callout Block -->
+    <div class="card">
+      <h3>Dataset Audit & Discrepancy Notes</h3>
+      
+      <!-- Device Daily Summary Section -->
+      <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:12px;margin-bottom:14px;">
+        <div class="k m">
+          <small class="mut b">DEVICE DAILY AVERAGE</small>
+          <b>${daily.average} BPM</b>
+          <small>${daily.note}</small>
+        </div>
+        <div class="k c">
+          <small class="mut b">DEVICE DAILY MAX</small>
+          <b>${daily.max} BPM</b>
+          <small>${daily.date} daily summary</small>
+        </div>
+        <div class="k l">
+          <small class="mut b">DEVICE DAILY MIN</small>
+          <b>${daily.min} BPM</b>
+          <small>${daily.date} daily summary</small>
+        </div>
+      </div>
+
+      <!-- Max Discrepancy Notice -->
+      <div class="callout">
+        <b>⚠️ Daily Summary vs. Individual Measurements Discrepancy:</b>
+        <div style="margin-top:4px;">
+          The device daily summary reports a maximum heart rate of <b>${daily.max} BPM</b>, whereas the individual timestamped measurements recorded a peak of <b>${baseline.max_observed_bpm} BPM</b> (Reading #5 on 2026-10-28 02:07:10+05:30).
+          This discrepancy is surfaced as reported in the DaFit hardware export and is <b>not reconciled</b>.
+        </div>
+      </div>
+
+      <!-- Untimed Samples Excluded Notice -->
+      <div style="margin-top:12px;padding:10px 14px;background:#f8fafc;border:1px solid var(--bd);border-radius:10px;font-size:12px;">
+        <b>Untimed Samples Excluded:</b> Exactly <b>${notes.untimed_samples_excluded}</b> array samples (<code>heart_rate_sample</code> with record type <code>array_sample_no_exact_time</code>) were excluded from baseline calculations and time-series replay because the export lacks timestamp metadata. No artificial timestamps or smoothing were applied.
+      </div>
+
+      <!-- Baseline Medical Disclaimer -->
+      <div style="margin-top:12px;font-size:11px;color:var(--mut);line-height:1.5;">
+        <b>Preliminary Baseline Notice:</b> Personal baseline statistics are calculated strictly from the 19 recorded readings. Status is: <code>${baseline.status}</code>.
+        UrgentIQ is an academic prototype and NOT a certified medical device. It does not infer resting heart rate or provide clinical diagnoses.
+      </div>
+    </div>
+  `;
+}
+
+// --- List & Chip Functions for Original ER Dashboard ---
+function list(max) {
+  let r = P.map((p, i) => [p, i]);
+  if (fl != 'All') r = r.filter(([p]) => L[p.lv][0] == fl.toUpperCase());
+  const s = q.toLowerCase();
+  if (s) r = r.filter(([p]) => (p.id + p.name + p.cc).toLowerCase().includes(s));
+  if (srt == 'Wait time') r.sort((a, b) => b[0].w - a[0].w);
+  if (max) r = r.slice(0, max);
+  return r.map(([p, i], k) => `
+    <div class="row ${L[p.lv][1]} ${i == sel && view == 'dash' ? 'act' : ''}" onclick="pick(${i}, ${view == 'queue' ? "'patient'" : '0'})">
+      <span class="rk ${L[p.lv][1]}">${i + 1}</span>
+      <div class="pid"><b>${p.id}</b><span class="xs mut">${p.age} yrs · ${p.sex}</span></div>
+      <div class="cc">${p.cc}</div>
+      <span class="tag ${L[p.lv][1]}">${p.lv == 'C' ? '⚠ ' : ''}${L[p.lv][0]}</span>
+      <div class="wt">Wait<b>${p.w} min</b></div>
+      <span class="mut">›</span>
+    </div>
+  `).join('') || '<p class="mut">No patients match. Clear the search or choose another filter.</p>';
+}
+
+function chips() {
+  const n = k => P.filter(p => L[p.lv][0] == k.toUpperCase()).length;
+  return `
+    <div class="chips">
+      <span class="chip all ${fl == 'All' ? 'sel' : ''}" onclick="fl='All';render()">All (${P.length})</span>
+      ${['Critical', 'High', 'Moderate', 'Low'].map(k => `
+        <span class="chip ${k == 'Critical' ? 'c' : k == 'High' ? 'h' : k == 'Moderate' ? 'm' : 'l'} ${fl == k ? 'sel' : ''}" onclick="fl='${k}';render()">${k} (${n(k)})</span>
+      `).join('')}
+    </div>
+  `;
+}
+
+const sp = u => `
+  <svg viewBox="0 0 40 18" fill="none" stroke="currentColor" stroke-width="1.6">
+    <polyline points="${u ? '0,14 10,10 18,12 28,6 40,3' : '0,4 10,8 18,6 28,12 40,15'}"/>
+  </svg>
+`;
+
+function vitals(p) {
+  const s = +p.bp.split('/')[0];
+  const V = [
+    ['❤ Heart Rate', p.hr, 'bpm', '(60-100)', p.hr > 100 ? 1 : p.hr < 60 ? -1 : 0],
+    ['SpO₂', p.sp, '%', '(≥95)', p.sp < 95 ? -1 : 0],
+    ['Blood Pressure', p.bp, 'mmHg', '(90/60-120/80)', s >= 140 ? 1 : s < 90 ? -1 : 0],
+    ['Respiratory Rate', p.rr, '/min', '(12-20)', p.rr > 20 ? 1 : p.rr < 12 ? -1 : 0]
+  ];
+  return `
+    <div class="vit">
+      ${V.map(v => `
+        <div class="v ${v[4] ? 'c' : 'l'}">
+          <div>${v[0]}${sp(v[4] >= 0)}</div>
+          <b>${v[1]}</b> ${v[2]}
+          <div class="mut xs" style="font-weight:400">${v[3]}</div>
+          <span class="fl">${v[4] > 0 ? '↑ High' : v[4] < 0 ? '↓ Low' : 'Normal'}</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function detail(p, full) {
+  const k = L[p.lv][1];
+  return `
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:start">
+        <div>
+          <h3 style="font-size:${full ? 22 : 18}px;margin:0">
+            ${p.id} <span class="tag ${k}" style="vertical-align:middle">${L[p.lv][0]}</span>
+          </h3>
+          <div class="mut sm" style="margin-top:4px">${p.age} yrs · ${p.sex} | Arrived ${p.t} (${p.w} min ago)</div>
+        </div>
+        <div class="sm mut">Wait time: <b style="color:var(--ct)">${p.w} min</b></div>
+      </div>
+      <div class="sm" style="display:grid;grid-template-columns:90px 1fr;gap:6px;margin:14px 0">
+        <span class="mut">Name</span><b>${p.name}</b>
+        <span class="mut">Chief complaint</span><b>${p.cc}</b>
+        <span class="mut">Source</span><span>${p.src}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <b>Live Vitals <span class="badge-simulated">simulated</span></b>
+        <button class="ghost" onclick="toast('Trend view is not part of this prototype')">View Trends</button>
+      </div>
+      ${vitals(p)}
+      <div class="risk ${k}">
+        <span class="pc">${p.risk}%</span>
+        <div class="xs b">AI RISK ASSESSMENT <span class="badge-simulated">simulated</span></div>
+        <div class="b" style="font-size:15px">${p.risk >= 75 ? 'High' : p.risk >= 45 ? 'Moderate' : 'Low'} Risk of Deterioration</div>
+        <div class="bar"><i style="width:${p.risk}%"></i></div>
+        <div class="xs mut" style="margin-top:8px">Simulated AI risk estimate for demonstration — not a validated clinical prediction.</div>
+      </div>
+    </div>
+  `;
+}
+
+function side(p) {
+  return `
+    <div class="g2" style="margin-top:16px">
+      <div class="card m">
+        <h3>✨ Key Concerns</h3>
+        <ul class="cl">${p.con.map(c => `<li><i class="dot"></i>${c}</li>`).join('')}</ul>
+      </div>
+      <div class="card l">
+        <h3>🛡 Recommended Actions</h3>
+        <ul class="cl">${A[p.lv].map((a, i) => `<li><span class="num">${i + 1}</span>${a}</li>`).join('')}</ul>
+        <div class="xs mut" style="margin:10px 0">Example suggestions — clinician judgment decides.</div>
+        <button class="red" onclick="toast('Care team alerted for ${p.id}')">🔔 Alert Care Team</button>
+      </div>
+    </div>
+  `;
+}
+
+function pageHead(t, s) {
+  return `<h1>${t}</h1><p class="mut">${s}</p>`;
+}
+
+// --- View Router Handlers ---
+const R = {
+  dash() {
+    const c = P.filter(p => p.lv == 'C').length;
+    const h = P.filter(p => p.lv == 'H').length;
+    return pageHead('Emergency Department', 'Real-time patient prioritization using AI (simulated queue)') + `
+      <div class="kp">
+        <div class="k c"><b>${c}</b><span>Critical Patients</span><small>Need immediate attention</small></div>
+        <div class="k h"><b>${h}</b><span>High Priority</span><small>Within 15 minutes</small></div>
+        <div class="k m"><b>${P.length}</b><span>Total Patients</span><small>Currently in ER</small></div>
+        <div class="k l"><b>28 min</b><span>Average Wait Time</span><small>↘ 18% lower vs last hour</small></div>
+      </div>
+      <div class="g2" style="grid-template-columns:minmax(0,1fr) minmax(0,1.15fr)">
+        <div class="card">
+          <h3>
+            <span>Patient Queue</span>
+            <span class="badge-simulated">simulated data</span>
+          </h3>
+          ${chips()}
+          <select class="sel2" onchange="srt=this.value;render()" style="margin-bottom:12px">
+            <option>Sort by: Priority</option>
+            <option ${srt == 'Wait time' ? 'selected' : ''} value="Wait time">Sort by: Wait time</option>
+          </select>
+          ${list(6)}
+          <button class="viewall" onclick="go('queue')">View All Patients (${P.length}) →</button>
+        </div>
+        <div>
+          ${detail(P[sel])}
+          ${side(P[sel])}
+        </div>
+      </div>
+    `;
+  },
+  watch() {
+    return renderWatchVitalsPage();
+  },
+  queue() {
+    return pageHead('Patient Queue', 'All patients currently in the emergency department, most urgent first (simulated).') + `
+      <div class="card">
+        <input class="in" id="qf" value="${q.replace(/"/g, '')}" placeholder="🔍 Filter by patient ID, name or symptoms" oninput="q=this.value;render();$('qf').focus();$('qf').setSelectionRange(q.length,q.length)" style="margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
+          ${chips()}
+          <select class="sel2" onchange="srt=this.value;render()" style="align-self:flex-start">
+            <option value="Priority">Sort by: Priority</option>
+            <option value="Wait time" ${srt == 'Wait time' ? 'selected' : ''}>Sort by: Wait time</option>
+          </select>
+        </div>
+        ${list()}
+      </div>
+    `;
+  },
+  patient() {
+    const p = P[sel];
+    return pageHead('Patient Details', `Full record for ${p.id} · ${p.name} (simulated data)`) + `
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+        ${P.map((x, i) => `
+          <span class="chip ${L[x.lv][1]} ${i == sel ? 'sel' : ''}" onclick="pick(${i})">${x.id}</span>
+        `).join('')}
+      </div>
+      <div class="g2">
+        ${detail(p, 1)}
+        <div>
+          <div class="card">
+            <h3>Timeline</h3>
+            <div class="tl">
+              <div><b>${p.t}</b> Arrived (${p.src})</div>
+              <div><b>+1 min</b> Triage vitals recorded</div>
+              <div><b>+2 min</b> AI risk estimate: ${p.risk}% — ${L[p.lv][0]}</div>
+              <div><b>Now</b> Waiting for physician review</div>
+            </div>
+          </div>
+          <div class="card" style="margin-top:16px">
+            <h3>Clinician notes</h3>
+            ${p.notes.map(n => `<div class="sm" style="padding:6px 0;border-bottom:1px solid var(--bd)">${n}</div>`).join('') || '<p class="mut sm" style="margin-top:0">No notes yet. Add the first note for this patient.</p>'}
+            <textarea class="in" id="nt" rows="3" placeholder="Add a note…"></textarea>
+            <button class="btn" style="font-size:14px;padding:10px;margin-top:10px" onclick="const v=$('nt').value.trim();if(v){P[sel].notes.push('Dr. Kaur · '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})+' — '+v.replace(/</g,'&lt;'));render()}">Save note</button>
+          </div>
+        </div>
+      </div>
+      ${side(p)}
+    `;
+  },
+  alerts() {
+    return pageHead('Alerts', `${unread()} unread · simulated alerts for demonstration`) + `
+      <div class="card">
+        <div style="text-align:right;margin-bottom:10px">
+          <button class="ghost" onclick="AL.forEach(a=>a.u=0);render()">Mark all as read</button>
+        </div>
+        ${AL.map((a, i) => `
+          <div class="al ${a.u ? 'un' : ''}">
+            <div class="ic ${a.lv}">${a.lv == 'l' ? 'ℹ️' : '⚠️'}</div>
+            <div style="flex:1">
+              <div class="b">${a.t}</div>
+              <div class="mut xs">${a.m}</div>
+            </div>
+            ${a.u ? `<button class="ghost" onclick="AL[${i}].u=0;render()">Acknowledge</button>` : '<span class="mut xs">Read</span>'}
+          </div>
+        `).join('')}
+      </div>
+    `;
+  },
+  stats() {
+    const H = [['08', 9], ['09', 14], ['10', 12], ['11', 7], ['12', 11], ['13', 6], ['14', 8], ['15', 10]];
+    const mx = 14;
+    const tot = P.length;
+    const n = k => P.filter(p => p.lv == k).length;
+    const cs = [['C', 0], ['H', 0], ['M', 0], ['L', 0]];
+    let a = 0, gr = [], cl = ['var(--ct)', 'var(--ht)', 'var(--mt)', 'var(--lt)'];
+    cs.forEach((c, i) => {
+      const e = a + n(c[0]) / tot * 100;
+      gr.push(`${cl[i]} ${a}% ${e}%`);
+      a = e;
+    });
+
+    return pageHead('Analytics', 'Department performance today · simulated data') + `
+      <div class="kp">
+        <div class="k m"><b>${H.reduce((s, x) => s + x[1], 0)}</b><span>Arrivals today</span></div>
+        <div class="k l"><b>28 min</b><span>Avg wait time</span></div>
+        <div class="k h"><b>6 min</b><span>Avg time to triage</span></div>
+        <div class="k c"><b>2</b><span>Escalations</span></div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <h3>Arrivals by hour</h3>
+          <div class="bars">
+            ${H.map(x => `<div><i style="height:${x[1] / mx * 100}%" title="${x[1]}"></i>${x[0]}:00</div>`).join('')}
+          </div>
+        </div>
+        <div class="card">
+          <h3>Triage distribution</h3>
+          <div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap">
+            <div class="donut" style="background:conic-gradient(${gr.join(',')})"></div>
+            <ul class="cl">
+              ${cs.map((c, i) => `<li><i class="dot" style="background:${cl[i]}"></i>${L[c[0]][0]} — ${n(c[0])}</li>`).join('')}
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Average wait by priority (min)</h3>
+          ${cs.map((c, i) => {
+            const w = Math.round(P.filter(p => p.lv == c[0]).reduce((s, p) => s + p.w, 0) / n(c[0]));
+            return `
+              <div style="display:flex;align-items:center;gap:10px;margin:8px 0">
+                <span class="sm" style="width:80px">${L[c[0]][0]}</span>
+                <div style="flex:1;background:var(--soft);border-radius:9px;height:10px">
+                  <i style="display:block;height:100%;width:${w / 52 * 100}%;background:${cl[i]};border-radius:9px"></i>
+                </div>
+                <b class="sm" style="width:28px">${w}</b>
+              </div>
+            `;
+          }).join('')}
+        </div>
+        <div class="card">
+          <h3>AI alert accuracy</h3>
+          <p class="mut sm" style="margin-top:0">Not available in this prototype. Validated metrics would appear here once a clinical evaluation is run.</p>
+        </div>
+      </div>
+    `;
+  },
+  prefs() {
+    const T = (l, d, on) => `
+      <div class="set">
+        <div><b>${l}</b><div class="mut sm">${d}</div></div>
+        <label class="sw" style="margin:0"><input type="checkbox" ${on ? 'checked' : ''}><i></i></label>
+      </div>
+    `;
+    return pageHead('Settings', 'Manage alerts, thresholds and display.') + `
+      <div class="g2">
+        <div class="card">
+          <h3>Alerts</h3>
+          ${T('Critical patient alerts', 'Notify when a patient is marked critical', 1)}
+          ${T('Vitals deterioration alerts', 'Notify on rapid vital sign changes', 1)}
+          ${T('Wait-time alerts', 'Notify when a wait exceeds its target', 1)}
+          ${T('Sound notifications', 'Play a tone for new alerts', 0)}
+        </div>
+        <div class="card">
+          <h3>Thresholds</h3>
+          <div class="set"><b>High-risk threshold</b><select class="sel2"><option>≥ 75%</option><option>≥ 65%</option><option>≥ 85%</option></select></div>
+          <div class="set"><b>Wait-time target (High)</b><select class="sel2"><option>15 min</option><option>10 min</option><option>20 min</option></select></div>
+          <div class="set"><b>Hospital</b><span class="mut">City General Hospital</span></div>
+          <button class="btn" style="font-size:14px;padding:10px" onclick="toast('Settings saved')">Save changes</button>
+        </div>
+      </div>
+      <div class="foot">Academic prototype · not a clinically validated product. All patient data is simulated.</div>
+    `;
+  }
+};
+R.patients = function() { return R.patient(); };
+
+function render() {
+  $('nav').innerHTML = NAV.map(n => `
+    <button class="${n[0] == view ? 'on' : ''}" onclick="go('${n[0]}')">
+      ${n[2]} ${n[1]}${n[0] == 'alerts' && unread() ? `<span class="n">${unread()}</span>` : ''}
+    </button>
+  `).join('');
+  const handler = R[view] || R['dash'];
+  $('main').innerHTML = handler();
+  const gsEl = $('gs');
+  if (gsEl) gsEl.value = q;
+}
+
+// Auto-boot if already logged in / demo mode deep link
+window.addEventListener('DOMContentLoaded', () => {
+  const path = (location.pathname || '').replace(/^\/+/, '').split('/')[0];
+  const hash = (location.hash || '').slice(1);
+  const rawTarget = hash || path;
+  if (rawTarget) {
+    let target = rawTarget;
+    if (target === 'patients') target = 'patient';
+    if (target === 'analytics') target = 'stats';
+    if (target === 'settings') target = 'prefs';
+    if (NAV.some(n => n[0] === target)) {
+      $('login').classList.add('hide');
+      $('app').classList.remove('hide');
+      go(target);
+      clock();
+    }
+  }
+});
+</script>
+</body>
+</html>

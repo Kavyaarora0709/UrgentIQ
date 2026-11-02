@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { BarChart3, Bell, ChevronDown, ClipboardList, Home, LogOut, Search, Settings, Users } from "lucide-react";
+import { BarChart3, Bell, ChevronDown, ClipboardList, Home, LogOut, Search, Settings, Users, Watch } from "lucide-react";
 import { Logo } from "./ui";
 import { useStore } from "@/lib/store";
 import { signOut } from "@/lib/auth";
@@ -13,6 +13,7 @@ const nav = [
   { to: "/dashboard", label: "Emergency Dashboard", icon: Home },
   { to: "/queue", label: "Patient Queue", icon: Users },
   { to: "/patients", label: "Patient Details", icon: ClipboardList },
+  { to: "/smartwatch", label: "Smartwatch Vitals Lab", icon: Watch },
   { to: "/alerts", label: "Alerts", icon: Bell, badge: true },
   { to: "/analytics", label: "Analytics", icon: BarChart3 },
   { to: "/settings", label: "Settings", icon: Settings },
@@ -109,7 +110,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <main className="min-w-0 flex-1 p-4 pb-24 md:p-6">{children}</main>
       </div>
 
-      <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-6 border-t bg-card md:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-7 border-t bg-card md:hidden">
         {nav.map(({ to, label, icon: Icon }) => (
           <Link key={to} to={to} className="flex flex-col items-center gap-0.5 py-2 text-[10px] text-muted-foreground" activeProps={{ className: "text-primary font-semibold" }}>
             <Icon className="h-5 w-5" />

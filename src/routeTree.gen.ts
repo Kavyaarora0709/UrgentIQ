@@ -11,8 +11,14 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteImport } from './routes/_app'
+import { Route as AppAlertsRouteImport } from './routes/_app.alerts'
+import { Route as AppAnalyticsRouteImport } from './routes/_app.analytics'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppQueueRouteImport } from './routes/_app.queue'
+import { Route as AppSettingsRouteImport } from './routes/_app.settings'
+import { Route as AppSmartwatchRouteImport } from './routes/_app.smartwatch'
+import { Route as AppPatientsIndexRouteImport } from './routes/_app.patients.index'
+import { Route as AppPatientsIdRouteImport } from './routes/_app.patients.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,6 +28,16 @@ const IndexRoute = IndexRouteImport.update({
 const AppRoute = AppRouteImport.update({
   id: '/_app',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppAlertsRoute = AppAlertsRouteImport.update({
+  id: '/alerts',
+  path: '/alerts',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAnalyticsRoute = AppAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
   id: '/dashboard',
@@ -33,30 +49,97 @@ const AppQueueRoute = AppQueueRouteImport.update({
   path: '/queue',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSmartwatchRoute = AppSmartwatchRouteImport.update({
+  id: '/smartwatch',
+  path: '/smartwatch',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPatientsIndexRoute = AppPatientsIndexRouteImport.update({
+  id: '/patients/',
+  path: '/patients/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPatientsIdRoute = AppPatientsIdRouteImport.update({
+  id: '/patients/$id',
+  path: '/patients/$id',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/alerts': typeof AppAlertsRoute
+  '/analytics': typeof AppAnalyticsRoute
   '/dashboard': typeof AppDashboardRoute
   '/queue': typeof AppQueueRoute
+  '/settings': typeof AppSettingsRoute
+  '/smartwatch': typeof AppSmartwatchRoute
+  '/patients/$id': typeof AppPatientsIdRoute
+  '/patients/': typeof AppPatientsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/alerts': typeof AppAlertsRoute
+  '/analytics': typeof AppAnalyticsRoute
   '/dashboard': typeof AppDashboardRoute
   '/queue': typeof AppQueueRoute
+  '/settings': typeof AppSettingsRoute
+  '/smartwatch': typeof AppSmartwatchRoute
+  '/patients/$id': typeof AppPatientsIdRoute
+  '/patients': typeof AppPatientsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
+  '/_app/alerts': typeof AppAlertsRoute
+  '/_app/analytics': typeof AppAnalyticsRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/queue': typeof AppQueueRoute
+  '/_app/settings': typeof AppSettingsRoute
+  '/_app/smartwatch': typeof AppSmartwatchRoute
+  '/_app/patients/$id': typeof AppPatientsIdRoute
+  '/_app/patients/': typeof AppPatientsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/queue'
+  fullPaths:
+    | '/'
+    | '/alerts'
+    | '/analytics'
+    | '/dashboard'
+    | '/queue'
+    | '/settings'
+    | '/smartwatch'
+    | '/patients/$id'
+    | '/patients/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/queue'
-  id: '__root__' | '/' | '/_app' | '/_app/dashboard' | '/_app/queue'
+  to:
+    | '/'
+    | '/alerts'
+    | '/analytics'
+    | '/dashboard'
+    | '/queue'
+    | '/settings'
+    | '/smartwatch'
+    | '/patients/$id'
+    | '/patients'
+  id:
+    | '__root__'
+    | '/'
+    | '/_app'
+    | '/_app/alerts'
+    | '/_app/analytics'
+    | '/_app/dashboard'
+    | '/_app/queue'
+    | '/_app/settings'
+    | '/_app/smartwatch'
+    | '/_app/patients/$id'
+    | '/_app/patients/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -80,6 +163,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/alerts': {
+      id: '/_app/alerts'
+      path: '/alerts'
+      fullPath: '/alerts'
+      preLoaderRoute: typeof AppAlertsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/analytics': {
+      id: '/_app/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AppAnalyticsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/dashboard': {
       id: '/_app/dashboard'
       path: '/dashboard'
@@ -94,17 +191,57 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppQueueRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/settings': {
+      id: '/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/smartwatch': {
+      id: '/_app/smartwatch'
+      path: '/smartwatch'
+      fullPath: '/smartwatch'
+      preLoaderRoute: typeof AppSmartwatchRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/patients/': {
+      id: '/_app/patients/'
+      path: '/patients'
+      fullPath: '/patients/'
+      preLoaderRoute: typeof AppPatientsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/patients/$id': {
+      id: '/_app/patients/$id'
+      path: '/patients/$id'
+      fullPath: '/patients/$id'
+      preLoaderRoute: typeof AppPatientsIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
+  AppAlertsRoute: typeof AppAlertsRoute
+  AppAnalyticsRoute: typeof AppAnalyticsRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppQueueRoute: typeof AppQueueRoute
+  AppSettingsRoute: typeof AppSettingsRoute
+  AppSmartwatchRoute: typeof AppSmartwatchRoute
+  AppPatientsIdRoute: typeof AppPatientsIdRoute
+  AppPatientsIndexRoute: typeof AppPatientsIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppAlertsRoute: AppAlertsRoute,
+  AppAnalyticsRoute: AppAnalyticsRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppQueueRoute: AppQueueRoute,
+  AppSettingsRoute: AppSettingsRoute,
+  AppSmartwatchRoute: AppSmartwatchRoute,
+  AppPatientsIdRoute: AppPatientsIdRoute,
+  AppPatientsIndexRoute: AppPatientsIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)

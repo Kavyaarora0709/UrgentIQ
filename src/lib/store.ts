@@ -47,7 +47,13 @@ function load() {
   loaded = true;
   try {
     const raw = sessionStorage.getItem(KEY);
-    if (raw) state = { ...initial, ...JSON.parse(raw) };
+    if (raw) {
+      state = { ...initial, ...JSON.parse(raw) };
+      if (state.user && state.user.name === "Dr. Rahul Mehta") {
+        state.user.name = "Dr. Harleen Kaur";
+        state.user.initials = "HK";
+      }
+    }
   } catch {
     /* ignore */
   }
@@ -79,3 +85,44 @@ export function useStore<T>(sel: (s: State) => T): T {
     () => sel(initial),
   );
 }
+
+export function addNote(patientId: string, text: string, author = "Dr. Harleen Kaur") {
+  const note: Note = {
+    id: `N-${Date.now()}`,
+    patientId,
+    text,
+    author,
+    createdAt: new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }),
+  };
+  setState((s) => ({ ...s, notes: [note, ...s.notes] }));
+  return note;
+}
+
+export function resetAlerts() {
+  setState((s) => ({
+    ...s,
+    alerts: initialAlerts.map((a) => ({ ...a, acknowledged: false, resolved: false })),
+  }));
+}
+
+export function acknowledgeAlert(alertId: string) {
+  setState((s) => ({
+    ...s,
+    alerts: s.alerts.map((a) => (a.id === alertId ? { ...a, acknowledged: true } : a)),
+  }));
+}
+
+export function markAllAlertsRead() {
+  setState((s) => ({
+    ...s,
+    alerts: s.alerts.map((a) => ({ ...a, acknowledged: true })),
+  }));
+}
+
+export function updatePrefs(prefs: Partial<Prefs>) {
+  setState((s) => ({
+    ...s,
+    prefs: { ...s.prefs, ...prefs },
+  }));
+}
+

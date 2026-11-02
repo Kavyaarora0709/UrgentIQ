@@ -1,0 +1,20 @@
+timestamp,heart_rate_bpm,baseline_bpm,deviation_bpm,robust_z_score,status
+2026-10-28 01:55:03+05:30,86.0,84.0,2.0,0.3372453797382976,within_personal_statistical_pattern
+2026-10-28 01:59:35+05:30,88.0,84.0,4.0,0.6744907594765952,within_personal_statistical_pattern
+2026-10-28 02:03:27.236000+05:30,89.0,84.0,5.0,0.8431134493457441,within_personal_statistical_pattern
+2026-10-28 02:04:25+05:30,85.0,84.0,1.0,0.1686226898691488,within_personal_statistical_pattern
+2026-10-28 02:07:10+05:30,124.0,84.0,40.0,6.7449075947659525,unusual_deviation_review
+2026-10-28 02:09:52+05:30,75.0,84.0,-9.0,-1.5176042088223392,within_personal_statistical_pattern
+2026-10-28 02:10:39+05:30,88.0,84.0,4.0,0.6744907594765952,within_personal_statistical_pattern
+2026-10-28 02:12:47.428000+05:30,90.0,84.0,6.0,1.011736139214893,within_personal_statistical_pattern
+2026-10-28 02:13:49.366000+05:30,83.0,84.0,-1.0,-0.1686226898691488,within_personal_statistical_pattern
+2026-10-28 02:16:31.292000+05:30,81.0,84.0,-3.0,-0.5058680696074465,within_personal_statistical_pattern
+2026-10-28 09:20:53.705000+05:30,52.0,84.0,-32.0,-5.395926075812762,unusual_deviation_review
+2026-10-28 09:26:32.482000+05:30,83.0,84.0,-1.0,-0.1686226898691488,within_personal_statistical_pattern
+2026-10-28 09:27:44.606000+05:30,78.0,84.0,-6.0,-1.011736139214893,within_personal_statistical_pattern
+2026-10-28 09:28:30.017000+05:30,77.0,84.0,-7.0,-1.1803588290840417,within_personal_statistical_pattern
+2026-10-28 09:52:38.192000+05:30,83.0,84.0,-1.0,-0.1686226898691488,within_personal_statistical_pattern
+2026-10-28 09:54:04.893000+05:30,84.0,84.0,0.0,0.0,within_personal_statistical_pattern
+2026-10-28 09:54:54.093000+05:30,90.0,84.0,6.0,1.011736139214893,within_personal_statistical_pattern
+2026-10-28 09:56:01.292000+05:30,81.0,84.0,-3.0,-0.5058680696074465,within_personal_statistical_pattern
+2026-10-28 10:27:53.138000+05:30,89.0,84.0,5.0,0.8431134493457441,within_personal_statistical_pattern
