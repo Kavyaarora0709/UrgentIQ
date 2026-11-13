@@ -13,7 +13,7 @@ function AppLayout() {
   const user = useStore((s) => s.user);
 
   useEffect(() => {
-    if (!getState().user) navigate({ to: "/" });
+    if (!getState().user) navigate({ to: "/login" });
     else setReady(true);
   }, [navigate, user]);
 

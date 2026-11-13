@@ -43,7 +43,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   const logout = () => {
     signOut();
-    navigate({ to: "/" });
+    navigate({ to: "/login" });
   };
 
   return (
