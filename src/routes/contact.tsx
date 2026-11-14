@@ -1,14 +1,6 @@
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import {
-  AlertCircle,
-  Check,
-  ClipboardCopy,
-  Info,
-  Mail,
-  RotateCcw,
-  ShieldCheck,
-} from "lucide-react";
+import { Check, Mail, RotateCcw, ShieldCheck } from "lucide-react";
 import { z } from "zod";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { PageHero } from "@/components/marketing/MarketingPrimitives";
@@ -18,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
-export const DEMO_CONTACT_EMAIL = "kavyaa037@gmail.com";
+const DEMO_CONTACT_EMAIL = "kavyaa037@gmail.com";
 
 const PRELISTED_MESSAGES = [
   {
@@ -45,7 +37,7 @@ export const Route = createFileRoute("/contact")({
       {
         name: "description",
         content:
-          "Prepare and send a demo request for your hospital or emergency department team using your default email client.",
+          "Prepare and send a demo request for your hospital or emergency department team.",
       },
       { property: "og:title", content: "Request a Demo — UrgentIQ" },
       {
@@ -84,7 +76,7 @@ const INITIAL_FORM: DemoFormValues = {
   message: PRELISTED_MESSAGES[0].text,
 };
 
-function buildMailtoHref(data: Partial<DemoFormValues>) {
+function buildGmailComposeUrl(data: Partial<DemoFormValues>) {
   const subject = data.organisation
     ? `UrgentIQ Demo Request — ${data.organisation}`
     : "UrgentIQ Demo Request";
@@ -92,12 +84,19 @@ function buildMailtoHref(data: Partial<DemoFormValues>) {
     data.message || PRELISTED_MESSAGES[0].text,
     "",
     "---",
-    `Name: ${data.name || "[Your Name]"}`,
-    `Work Email: ${data.workEmail || "[Your Work Email]"}`,
-    `Hospital / Organisation: ${data.organisation || "[Hospital / Organisation]"}`,
-    `Designation: ${data.designation || "[Designation]"}`,
+    `Name: ${data.name || ""}`,
+    `Work Email: ${data.workEmail || ""}`,
+    `Hospital / Organisation: ${data.organisation || ""}`,
+    `Designation: ${data.designation || ""}`,
   ];
-  return `mailto:${DEMO_CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyLines.join("\n"))}`;
+  const params = new URLSearchParams({
+    view: "cm",
+    fs: "1",
+    to: DEMO_CONTACT_EMAIL,
+    su: subject,
+    body: bodyLines.join("\n"),
+  });
+  return `https://mail.google.com/mail/?${params.toString()}`;
 }
 
 function ContactPage() {
@@ -105,7 +104,6 @@ function ContactPage() {
   const [activePreset, setActivePreset] = useState<string>(PRELISTED_MESSAGES[0].id);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState<DemoFormValues | null>(null);
-  const [copied, setCopied] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -122,35 +120,14 @@ function ContactPage() {
     }
     setErrors({});
     setSubmitted(parsed.data);
-    setCopied(false);
 
+    const gmailUrl = buildGmailComposeUrl(parsed.data);
     if (typeof window !== "undefined") {
       try {
-        window.location.href = buildMailtoHref(parsed.data);
+        window.open(gmailUrl, "_blank", "noopener,noreferrer");
       } catch {
-        // Safe fallback in environments where location setter is restricted
+        // Fallback
       }
-    }
-  };
-
-  const handleCopy = async () => {
-    if (!submitted) return;
-    const summary = [
-      `Subject: UrgentIQ Demo Request — ${submitted.organisation}`,
-      "",
-      submitted.message,
-      "",
-      "---",
-      `Name: ${submitted.name}`,
-      `Work Email: ${submitted.workEmail}`,
-      `Hospital / Organisation: ${submitted.organisation}`,
-      `Designation: ${submitted.designation}`,
-    ].join("\n");
-    try {
-      await navigator.clipboard.writeText(summary);
-      setCopied(true);
-    } catch {
-      setCopied(false);
     }
   };
 
@@ -159,7 +136,6 @@ function ContactPage() {
     setActivePreset(PRELISTED_MESSAGES[0].id);
     setErrors({});
     setSubmitted(null);
-    setCopied(false);
   };
 
   return (
@@ -167,40 +143,22 @@ function ContactPage() {
       <PageHero
         eyebrow="Request a Demo"
         title="See How UrgentIQ Approaches Dynamic Triage"
-        description="Select a pre-written message or customise your note below to send an email demo request from your default mail client."
+        description="Select a pre-written message or customise your note below to request an UrgentIQ demonstration."
       />
 
       <section className="py-14 sm:py-20">
         <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,0.85fr)] lg:px-8">
           <div className="card-surface p-6 sm:p-8">
-            <div
-              role="note"
-              className="mb-6 flex items-start gap-3 rounded-xl border border-primary/20 bg-primary-soft p-4 text-sm"
-            >
-              <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-              <div>
-                <p className="font-bold text-foreground">
-                  Direct Email Client Dispatch — No Backend Connection
-                </p>
-                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                  This demo request runs client-side with no intermediary backend server.
-                  Submitting validates your details and opens your default email client with your
-                  selected message and details ready to send.
-                </p>
-              </div>
-            </div>
-
             {submitted ? (
-              <div className="space-y-5" aria-live="polite">
-                <div className="rounded-xl border border-primary/25 bg-primary-soft p-5">
-                  <div className="flex items-center gap-2 text-sm font-bold text-accent-foreground">
-                    <Info className="h-4 w-4 shrink-0 text-primary" />
-                    Default Email Client Opened
+              <div className="space-y-6" aria-live="polite">
+                <div className="rounded-xl border border-primary/25 bg-primary-soft p-6">
+                  <div className="flex items-center gap-2.5 text-base font-bold text-accent-foreground">
+                    <Check className="h-5 w-5 shrink-0 text-primary" />
+                    Demo Request Opened in Gmail
                   </div>
-                  <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
-                    Your default mail application has been launched with your request pre-filled.
-                    Please hit send in your email client to complete your request. If your mail
-                    app did not open automatically, click the button below or copy the message text.
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    A new Gmail compose window has been opened with your message. Please click Send
+                    in Gmail to submit your demo request.
                   </p>
                 </div>
 
@@ -244,35 +202,25 @@ function ContactPage() {
                 </dl>
 
                 <div className="flex flex-wrap gap-3">
-                  <Button asChild className="font-semibold">
-                    <a href={buildMailtoHref(submitted)}>
+                  <Button asChild size="lg" className="font-semibold">
+                    <a
+                      href={buildGmailComposeUrl(submitted)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <Mail className="h-4 w-4" />
-                      Open Email App Again
+                      Open Gmail Again
                     </a>
                   </Button>
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={handleCopy}
-                    className="font-semibold"
-                  >
-                    {copied ? (
-                      <>
-                        <Check className="h-4 w-4" /> Copied Message
-                      </>
-                    ) : (
-                      <>
-                        <ClipboardCopy className="h-4 w-4" /> Copy Email Text
-                      </>
-                    )}
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="ghost"
+                    size="lg"
                     onClick={handleReset}
                     className="font-semibold"
                   >
-                    <RotateCcw className="h-4 w-4" /> Edit / Send Another Request
+                    <RotateCcw className="h-4 w-4" />
+                    Send Another Request
                   </Button>
                 </div>
               </div>
@@ -385,15 +333,11 @@ function ContactPage() {
                   )}
                 </div>
 
-                <div className="pt-1">
+                <div className="pt-2">
                   <Button type="submit" size="lg" className="w-full font-semibold sm:w-auto">
                     Send
                   </Button>
                 </div>
-                <p className="text-xs leading-relaxed text-muted-foreground">
-                  Submitting launches your device&apos;s default email client with your message pre-filled.
-                  Send the email from there directly — no backend or server connection is required.
-                </p>
               </form>
             )}
           </div>
@@ -419,13 +363,12 @@ function ContactPage() {
 
             <div className="card-surface space-y-3 p-6">
               <div className="flex items-center gap-2 text-sm font-bold text-foreground">
-                <ShieldCheck className="h-4 w-4 text-stable" />
-                Direct Email Dispatch
+                <ShieldCheck className="h-4 w-4 text-primary" />
+                Schedule a Consultation
               </div>
               <p className="text-xs leading-relaxed text-muted-foreground">
-                Demo requests launch directly in your default email application with zero
-                intermediary servers or third-party storage. Existing team members can sign in to
-                access the prototype dashboard.
+                Our team coordinates directly with emergency department leads and hospital
+                leadership to demonstrate dynamic triage workflows.
               </p>
               <Button asChild variant="outline" size="sm" className="w-full font-semibold">
                 <Link to="/login">Go to Dashboard Login</Link>

@@ -218,7 +218,7 @@ describe("UrgentIQ Marketing & Auth Integration", () => {
     expect(getState().user?.hospital).toBe(DEMO_CREDENTIALS.hospital);
   });
 
-  it("validates the /contact demo form, pre-lists a message, and dispatches to default email app without rendering raw email", async () => {
+  it("validates the /contact demo form, pre-lists a message, and opens Gmail with the template typed", async () => {
     await renderAt("/contact");
     const messageInput = (await screen.findByLabelText(/^Message/i)) as HTMLTextAreaElement;
     expect(messageInput.value).toMatch(/UrgentIQ dynamic triage/i);
@@ -245,13 +245,16 @@ describe("UrgentIQ Marketing & Auth Integration", () => {
 
     fireEvent.click(screen.getByRole("button", { name: /^Send$/i }));
     expect(
-      await screen.findByText(/Default Email Client Opened/i),
+      await screen.findByText(/Demo Request Opened in Gmail/i),
     ).toBeInTheDocument();
     expect(screen.getByText(/Dr\. Meera Nair/i)).toBeInTheDocument();
-    const mailLink = screen.getByRole("link", { name: /Open Email App Again/i });
-    expect(mailLink.getAttribute("href")).toContain("mailto:kavyaa037@gmail.com");
+    const gmailLink = screen.getByRole("link", { name: /Open Gmail Again/i });
+    expect(gmailLink.getAttribute("href")).toContain("https://mail.google.com/mail/");
+    expect(gmailLink.getAttribute("href")).toContain("kavyaa037%40gmail.com");
 
-    // Verify the raw email address is NOT rendered in visible text anywhere on the page
+    // Verify the raw email address and technical jargon are NOT rendered in visible text
     expect(screen.queryByText(/kavyaa037@gmail\.com/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/No Backend Connection/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/default mail app/i)).not.toBeInTheDocument();
   });
 });

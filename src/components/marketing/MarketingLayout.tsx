@@ -197,15 +197,6 @@ export function MarketingLayout({ children }: { children: ReactNode }) {
                     Request a Demo
                   </Link>
                 </li>
-                <li className="pt-1 text-xs leading-relaxed text-muted-foreground">
-                  Hospital demo inquiries:{" "}
-                  <a
-                    href="mailto:kavyaa037@gmail.com?subject=UrgentIQ%20Demo%20Request"
-                    className="font-semibold text-primary hover:underline"
-                  >
-                    Open Email App
-                  </a>
-                </li>
               </ul>
             </div>
 
